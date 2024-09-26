@@ -41,7 +41,7 @@ jobs:
 
     - name: Send notification
       run: |
-        curl -X POST https://sc.ftqq.com/${{ secrets.SERVER_CHAN_KEY }}.send -d "text=Checkin Successful" -d "desp=Your checkin has been completed successfully."
+        curl -X POST https://sctapi.ftqq.com/${{ secrets.SERVER_CHAN_KEY }}.send -d "text=Checkin Successful" -d "desp=Your checkin has been completed successfully."
     
     - name: keep alive
       uses: gautamkrishnar/keepalive-workflow@v1
