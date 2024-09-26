@@ -32,15 +32,20 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install requests
+
     - name: running checkin
       run: |
         python checkin.py
       env:
-        PUSHPLUS: ${{ secrets.PUSHPLUS }}
         COOKIES: ${{ secrets.COOKIES }}
 
+    - name: Send notification
+      run: |
+        curl -X POST https://sc.ftqq.com/${{ secrets.SERVER_CHAN_KEY }}.send -d "text=Checkin Successful" -d "desp=Your checkin has been completed successfully."
+    
     - name: keep alive
-      uses: gautamkrishnar/keepalive-workflow@v1 # using the workflow with default settings
+      uses: gautamkrishnar/keepalive-workflow@v1
+
     - name: Delete workflow runs
       uses: Mattraks/delete-workflow-runs@v2
       with:
