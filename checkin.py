@@ -6,7 +6,7 @@ import os
 # -------------------------------------------------------------------------------------------
 if __name__ == '__main__':
     # pushplus秘钥 申请地址 http://www.pushplus.plus
-    sckey = os.environ.get("PUSHPLUS", "")
+    sckey = os.environ.get("SERVER_CHAN_SCKEY", "")
 
     # 推送内容
     title = ""
@@ -82,7 +82,7 @@ if __name__ == '__main__':
      # --------------------------------------------------------------------------------------------------------#
     print("sendContent:" + "\n", sendContent)
     if sckey != "":
-        title += f'成功{success},失败{fail},重复{repeats}'
-        plusurl = f"http://www.pushplus.plus/send?token={sckey}&title={title}&content={sendContent}"
-        r = requests.get(plusurl)
-        print(r.status_code)
+
+        url = "https://sctapi.ftqq.com/{}.send?title={}&desp={}".format(SCKEY, 'gla签到', content)
+        requests.post(url)
+        print('推送完成')
