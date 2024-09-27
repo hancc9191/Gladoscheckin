@@ -1,17 +1,19 @@
 import requests
 import json
 import os
-
+# -------------------------------------------------------------------------------------------
+# github workflows
+# -------------------------------------------------------------------------------------------
 if __name__ == '__main__':
-    # Server酱秘钥
-    sckey = os.environ.get('SERVER_CHAN_SCKEY')
+    # pushplus秘钥 申请地址 http://www.pushplus.plus
+    sckey = os.environ.get("PUSHPLUS", "")
 
     # 推送内容
     title = ""
-    success, fail, repeats = 0, 0, 0        
+    success, fail, repeats = 0, 0, 0        # 成功账号数量 失败账号数量 重复签到账号数量
     sendContent = ""
 
-    # glados账号cookie
+    # glados账号cookie 直接使用数组 如果使用环境变量需要字符串分割一下
     cookies = os.environ.get("COOKIES", []).split("&")
     if cookies[0] == "":
         print('未获取到COOKIE变量')
@@ -33,12 +35,18 @@ if __name__ == '__main__':
                                 'user-agent': useragent, 'content-type': 'application/json;charset=UTF-8'}, data=json.dumps(payload))
         state = requests.get(url2, headers={
                              'cookie': cookie, 'referer': referer, 'origin': origin, 'user-agent': useragent})
-
+    # --------------------------------------------------------------------------------------------------------#
         if checkin.status_code == 200:
-            result = checkin.json()
+            # 解析返回的json数据
+            result = checkin.json()     
+            # 获取签到结果
             status = result.get('message')
+
+            # 获取账号当前状态
             result = state.json()
+            # 获取剩余时间
             leftdays = int(float(result['data']['leftDays']))
+            # 获取账号email
             email = result['data']['email']
             
             print(status)
@@ -60,6 +68,7 @@ if __name__ == '__main__':
             message_status = "签到请求url失败, 请检查..."
             message_days = "获取信息失败"
 
+        # 推送内容
         sendContent += f"{status}\n\
             {'-'*30}\n\
             账号: {email}\n\
@@ -69,12 +78,11 @@ if __name__ == '__main__':
         
         if cookie == cookies[-1]:
             sendContent += '-' * 30
-
+        
+     # --------------------------------------------------------------------------------------------------------#
     print("sendContent:" + "\n", sendContent)
-    
-    # Server酱推送
     if sckey != "":
-        title = f'成功{success},失败{fail},重复{repeats}'
-        server_chan_url = "https://sctapi.ftqq.com/{SERVER_CHAN_SCKEY}.send?text={title}&desp={sendContent}"
-        r = requests.get(server_chan_url)
+        title += f'成功{success},失败{fail},重复{repeats}'
+        plusurl = f"http://www.pushplus.plus/send?token={sckey}&title={title}&content={sendContent}"
+        r = requests.get(plusurl)
         print(r.status_code)
