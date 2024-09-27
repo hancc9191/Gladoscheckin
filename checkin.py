@@ -4,7 +4,7 @@ import os
 
 if __name__ == '__main__':
     # Server酱秘钥
-    sckey = os.environ.get("SERVER_CHAN_SCKEY", "")
+    sckey = os.environ.get('SERVER_CHAN_SCKEY')
 
     # 推送内容
     title = ""
@@ -73,7 +73,7 @@ if __name__ == '__main__':
     print("sendContent:" + "\n", sendContent)
     
     # Server酱推送
-    if SERVER_CHAN_SCKEY != "":
+    if sckey != "":
         title = f'成功{success},失败{fail},重复{repeats}'
         server_chan_url = "https://sctapi.ftqq.com/{SERVER_CHAN_SCKEY}.send?text={title}&desp={sendContent}"
         r = requests.get(server_chan_url)
