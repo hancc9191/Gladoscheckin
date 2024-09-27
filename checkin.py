@@ -6,7 +6,7 @@ import os
 # -------------------------------------------------------------------------------------------
 if __name__ == '__main__':
     # pushplus秘钥 申请地址 http://www.pushplus.plus
-    sckey = os.environ.get("SERVER_CHAN_SCKEY", "")
+    sckey = os.environ.get("SERVER_CHAN_SCKEY")
 
     # 推送内容
     title = ""
@@ -81,7 +81,7 @@ if __name__ == '__main__':
         
      # --------------------------------------------------------------------------------------------------------#
     print("sendContent:" + "\n", sendContent)
-    if sckey != "":
+    if sckey != "1":
 
         url = "https://sctapi.ftqq.com/{}.send?title={}&desp={}".format(SCKEY, 'gla签到', content)
         requests.post(url)
