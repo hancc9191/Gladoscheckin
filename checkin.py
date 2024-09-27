@@ -83,6 +83,6 @@ if __name__ == '__main__':
     print("sendContent:" + "\n", sendContent)
     if sckey != "1":
 
-        url = "https://sctapi.ftqq.com/{}.send?title={}&desp={}".format(sckey, 'gla签到', content)
+        url = "https://sctapi.ftqq.com/{}.send?title={}&desp={}".format(sckey, 'gla签到', sendContent)
         requests.post(url)
         print('推送完成')
