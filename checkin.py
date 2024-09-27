@@ -73,8 +73,8 @@ if __name__ == '__main__':
     print("sendContent:" + "\n", sendContent)
     
     # Server酱推送
-    if sckey != "":
+    if SERVER_CHAN_SCKEY != "":
         title = f'成功{success},失败{fail},重复{repeats}'
-        server_chan_url = f"https://sctapi.ftqq.com/{sckey}.send?text={title}&desp={sendContent}"
+        server_chan_url = "https://sctapi.ftqq.com/{SERVER_CHAN_SCKEY}.send?text={title}&desp={sendContent}"
         r = requests.get(server_chan_url)
         print(r.status_code)
