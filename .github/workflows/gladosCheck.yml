@@ -1,16 +1,16 @@
 name: Auto Check
 
 on:
-  workflow_dispatch: # 手动触发
+  workflow_dispatch: # 保留手动触发
   push:
     branches: [ main ]
     paths-ignore:
       - 'README.md'
       - 'imgs/**' # 优化路径写法，支持子目录
   schedule:
-    - cron: '23 22 * * *' # 每天UTC 22:23运行，确认是否需要调整
-watch:
-types: started # 注释掉，除非明确需要Star触发
+    - cron: '23 22 * * *' # 每天UTC 22:23运行，可调整为中午
+  watch:
+    types: started # 保留，但建议确认是否需要
 
 # 添加权限配置
 permissions:
@@ -56,6 +56,6 @@ jobs:
       with:
         token: ${{ github.token }}
         repository: ${{ github.repository }}
-        retain_days: 7 # 保留7天运行记录，避免丢失重要日志
+        retain_days: 7 # 保留7天运行记录，避免丢失日志
         keep_minimum_runs: 10
         delete_run_by_conclusion_pattern: success
