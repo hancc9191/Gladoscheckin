@@ -6,16 +6,15 @@ on:
     branches: [ main ]
     paths-ignore:
       - 'README.md'
-      - 'imgs/**' # 优化路径写法，支持子目录
+      - 'imgs/**'
   schedule:
-    - cron: '23 22 * * *' # 每天UTC 22:23运行，可调整为中午
+    - cron: '23 22 * * *' # 每天UTC 22:23，可调整为北京时间中午
   watch:
-    types: started # 保留，但建议确认是否需要
+    types: started # 保留，建议确认是否需要
 
-# 添加权限配置
 permissions:
-  contents: read # 允许读取仓库内容
-  actions: write # 允许操作Actions（如删除运行日志、keepalive）
+  contents: write # 允许读写仓库内容（用于空提交）
+  actions: write # 允许操作Actions（如删除运行日志）
 
 jobs:
   build:
@@ -23,13 +22,13 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.11] # 升级到3.11，3.8已接近停更
+        python-version: [3.11]
 
     steps:
-    - uses: actions/checkout@v4 # 升级到v4
+    - uses: actions/checkout@v4
 
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v5 # 升级到v5
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
 
@@ -49,13 +48,19 @@ jobs:
         curl -X POST https://sctapi.ftqq.com/${{ secrets.SERVER_CHAN_KEY }}.send -d "text=Checkin Successful" -d "desp=Your checkin has been completed successfully."
 
     - name: Keep alive
-      uses: gautamkrishnar/keepalive-workflow@v2 # 升级到v2
+      run: |
+        git config user.name "GitHub Action"
+        git config user.email "action@github.com"
+        git commit --allow-empty -m "Keep repository active"
+        git push
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Delete workflow runs
       uses: Mattraks/delete-workflow-runs@v2
       with:
         token: ${{ github.token }}
         repository: ${{ github.repository }}
-        retain_days: 7 # 保留7天运行记录，避免丢失日志
+        retain_days: 7
         keep_minimum_runs: 10
         delete_run_by_conclusion_pattern: success
