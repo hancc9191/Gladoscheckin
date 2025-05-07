@@ -1,30 +1,35 @@
 name: Auto Check
 
 on:
-  workflow_dispatch:
+  workflow_dispatch: # 手动触发
   push:
     branches: [ main ]
     paths-ignore:
       - 'README.md'
-      - 'imgs/'
+      - 'imgs/**' # 优化路径写法，支持子目录
   schedule:
-    - cron: '23 22 * * *'
-  watch:
-    types: started
+    - cron: '23 22 * * *' # 每天UTC 22:23运行，确认是否需要调整
+watch:
+types: started # 注释掉，除非明确需要Star触发
+
+# 添加权限配置
+permissions:
+  contents: read # 允许读取仓库内容
+  actions: write # 允许操作Actions（如删除运行日志、keepalive）
 
 jobs:
   build:
-    name: Glados checkin
+    name: Glados Checkin
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.8]
+        python-version: [3.11] # 升级到3.11，3.8已接近停更
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4 # 升级到v4
 
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v5 # 升级到v5
       with:
         python-version: ${{ matrix.python-version }}
 
@@ -33,7 +38,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install requests
 
-    - name: running checkin
+    - name: Running checkin
       run: |
         python checkin.py
       env:
@@ -42,15 +47,15 @@ jobs:
     - name: Send notification
       run: |
         curl -X POST https://sctapi.ftqq.com/${{ secrets.SERVER_CHAN_KEY }}.send -d "text=Checkin Successful" -d "desp=Your checkin has been completed successfully."
-    
-    - name: keep alive
-      uses: gautamkrishnar/keepalive-workflow@v2
+
+    - name: Keep alive
+      uses: gautamkrishnar/keepalive-workflow@v2 # 升级到v2
 
     - name: Delete workflow runs
       uses: Mattraks/delete-workflow-runs@v2
       with:
         token: ${{ github.token }}
         repository: ${{ github.repository }}
-        retain_days: 0
+        retain_days: 7 # 保留7天运行记录，避免丢失重要日志
         keep_minimum_runs: 10
         delete_run_by_conclusion_pattern: success
