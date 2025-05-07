@@ -44,7 +44,7 @@ jobs:
         curl -X POST https://sctapi.ftqq.com/${{ secrets.SERVER_CHAN_KEY }}.send -d "text=Checkin Successful" -d "desp=Your checkin has been completed successfully."
     
     - name: keep alive
-      uses: gautamkrishnar/keepalive-workflow@v1
+      uses: gautamkrishnar/keepalive-workflow@v2
 
     - name: Delete workflow runs
       uses: Mattraks/delete-workflow-runs@v2
